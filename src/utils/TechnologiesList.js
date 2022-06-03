@@ -1,0 +1,1 @@
+export const technologiesList = ['HTML', 'CSS', 'JS', 'React', 'Git', 'Express.js', 'mongoDB'];

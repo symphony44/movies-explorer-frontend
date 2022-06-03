@@ -1,0 +1,12 @@
+.root {
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
+  background-color: #202020;
+  color: #FFFFFF;
+}
+
+.root__container {
+  margin: 0 auto;
+  width: calc(100% - 140px);
+  max-width: 1280px;
+  width: 100%;
+}
