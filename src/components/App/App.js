@@ -25,7 +25,7 @@ function App() {
   const [savedMovies, setSavedMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState({});
-  const [successUpdateUser, setSuccessUpdateUser] = useState('');
+  const [successUpdate, setSuccessUpdate] = useState('');
 
   const pathPageWithFooter = ['/', '/movies', '/saved-movies'];
   const pathPageWithHeader = ['/']
@@ -66,7 +66,7 @@ function App() {
   }, [loggedIn]);
 
   const filterRemovedCard = (movie) => {
-    setSavedMovies((savedMovies) => savedMovies.filter((i) => +i.movieId !== +movie.id));
+    setSavedMovies((savedMovies) => savedMovies.filter((item) => +item.movieId !== +movie.id));
   };
 
   const handleRemoveCard = (movie) => {
@@ -78,7 +78,7 @@ function App() {
   };
 
   const handleLikeClick = (movieCard) => {
-    const movie = savedMovies.find((i) => +i.movieId === movieCard.id);
+    const movie = savedMovies.find((item) => +item.movieId === movieCard.id);
 
     if (movie) {
       mainApi.removeMovie(movie._id)
@@ -99,8 +99,8 @@ function App() {
     setIsLoading(true);
     mainApi.updateUserInfo(name, email)
       .then((result) => {
-        setSuccessUpdateUser('Данные успешно обновлены!');
-        setTimeout(() => setSuccessUpdateUser(''), 2000);
+        setSuccessUpdate('Данные успешно обновлены!');
+        setTimeout(() => setSuccessUpdate(''), 2000);
         setServerError({});
         setCurrentUser(result);
       })
@@ -192,24 +192,24 @@ function App() {
             <Route path='/movies' element={
               <ProtectedRoute
                 isLoggin={loggedIn}
-                redirectTo='/'>
+                >
                 <Movies handleLikeClick={handleLikeClick} />
               </ProtectedRoute>
             } />
             <Route path='/saved-movies' element={
               <ProtectedRoute
                 isLoggin={loggedIn}
-                redirectTo='/'>
+                >
                 <SavedMovies handleRemoveCard={handleRemoveCard} />
               </ProtectedRoute>
             } />
             <Route path='/profile' element={
               <ProtectedRoute
                 isLoggin={loggedIn}
-                redirectTo='/'>
+                >
                 <Profile
                   handleButtonEdit={onUpdateUser}
-                  success={successUpdateUser}
+                  success={successUpdate}
                   serverError={serverError.profile}
                   isLoading={isLoading}
                   resetServerError={resetServerError}

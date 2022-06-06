@@ -2,6 +2,8 @@
   font-family: 'Inter', Arial, Helvetica, sans-serif;
   background-color: #202020;
   color: #FFFFFF;
+  background-size: cover;
+  margin: 0;
 }
 
 .root__container {

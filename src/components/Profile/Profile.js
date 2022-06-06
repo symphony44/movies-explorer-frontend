@@ -64,7 +64,7 @@ function Profile({ handleLogout, handleButtonEdit, success, serverError, isLoadi
           <button className='profile__button profile__button_type_submit'
             form='profile-form'
             onClick={(e) => handleButtonEdit(e, name.value, email.value)}
-            disabled={isFormInvalid}
+            disabled={isFormInvalid} 
           >
             Редактировать
           </button>

@@ -46,11 +46,16 @@ function Movies({ handleLikeClick }) {
   };
 
   const handleClickButtonAddMore = () => {
-    windowWidth >= DESKTOP_WIDTH
+    /* windowWidth >= DESKTOP_WIDTH
       && setCardCount(cardCount + NUMBER_OF_CARDS_TO_BE_ADDED_ON_DESKTOP);
 
     windowWidth >= MOBILE_WIDTH
-      && windowWidth < DESKTOP_WIDTH && setCardCount(cardCount + NUMBER_OF_CARDS_TO_BE_ADDED_ON_MOBILE);
+      && windowWidth < DESKTOP_WIDTH && setCardCount(cardCount + NUMBER_OF_CARDS_TO_BE_ADDED_ON_MOBILE); */
+
+    const width = cardCount + ((windowWidth >= DESKTOP_WIDTH) ? NUMBER_OF_CARDS_TO_BE_ADDED_ON_DESKTOP : NUMBER_OF_CARDS_TO_BE_ADDED_ON_MOBILE);
+    setCardCount(width);
+
+    localStorage.setItem('cardCount', JSON.stringify(width));
   };
 
   useEffect(() => {
@@ -78,6 +83,13 @@ function Movies({ handleLikeClick }) {
   }, []);
 
   useEffect(() => {
+    const localCardCount = JSON.parse(localStorage.getItem('cardCount'));
+    if (localCardCount) {
+      setCardCount(localCardCount);
+    }
+  }, [movies]);
+
+  useEffect(() => {
     localStorage.setItem('toggleState', isEnableShortMovies);
   }, [isEnableShortMovies]);
 
@@ -85,6 +97,7 @@ function Movies({ handleLikeClick }) {
     const filteredMovies = filterMovies(JSON.parse(localStorage.getItem('movies')), searchQuery);
     filteredMovies.length === 0 && setResponseText('Ничего не найдено.');
     localStorage.setItem('reqData', JSON.stringify({ movies: filteredMovies, searchQuery: searchQuery }));
+    localStorage.removeItem('cardCount');
     (!isEnableShortMovies) ?
       setMovies(filteredMovies)
       :
