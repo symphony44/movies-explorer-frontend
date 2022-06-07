@@ -1,52 +1,64 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
+import { SavedMoviesContext } from '../../../context/SavedMoviesContext';
+import { calcDuration } from '../../../utils/calcDuration';
 import './MoviesCard.css';
 
+function MoviesCard({ movieData, handleLikeClick, handleRemoveButton }) {
 
-function MoviesCard({ image, title, duration, trailerLink }) {
+  const isTouchDevice = 'ontouchstart' in window;
+
+  const savedMovies = useContext(SavedMoviesContext);
+  const isLiked = savedMovies.find(i => +i.movieId === movieData.id)
 
   const location = useLocation().pathname;
 
-  const [saved, setSaved] = useState(false);
   const [imageHovered, setImageHovered] = useState(false);
-
-  const calcDuration = (min) => {
-    const hour = Math.floor(min / 60);
-    const minute = Math.floor(min % 60);
-    return `${hour === 0 ? "" : `${hour}ч`} ${minute}м`;
-  }
 
   const handleMouseEnter = () => setImageHovered(true);
   const handleMouseLeave = () => setImageHovered(false);
 
   return (
     <article className='movie'>
-      <a className='movie__link' href={trailerLink} target='_blank' rel='noopener noreferrer' >
-        <img className='movie__image' src={image} alt={`Эпизод из фильма ${title}`}
-            />
+      <a className='movie__link' href={movieData.trailerLink} target='_blank' rel='noopener noreferrer' >
+        <img className='movie__image' src={location === '/movies' ? `https://api.nomoreparties.co${movieData.image.url}` : movieData.image.url} alt={`Превью фильма "${movieData.nameRU}"`}
+       />
       </a>
-      {
-        location === '/movies' ?
-      <div className='movie__info'>
-        <div className='movie__details'>
-          <h2 className='movie__title'>{title}</h2>
-          <span className='movie__duration'>{calcDuration(duration)}</span>
-        </div>  
-          <button className={`movie__btn ${saved && 'movie__btn_type_saved'} ${!saved && 'movie__btn_type_save'}`}
-            type='button' onClick={() => setSaved(!saved)} ></button>
-      </div>
-          :
-      <div className='movie__info'  onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+      <div className='movie__info' onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <div className='movie__details' >
-          <h2 className='movie__title'>{title}</h2>
-          <span className='movie__duration'>{calcDuration(duration)}</span>
+          <h2 className='movie__title'>{movieData.nameRU}</h2>
+          <span className='movie__duration'>{calcDuration(movieData.duration)}</span>
         </div>
-        <button className={`movie__btn ${imageHovered && 'movie__btn_type_remove'}`}
-            type='button' onClick={() => console.log('Фильм удалён')}></button>
-      </div>
+        { isTouchDevice ?
+        location === '/movies' ?
+          <button className={
+            isLiked ?
+              'movie__btn movie__btn_type_saved'
+              :
+              'movie__btn movie__btn_type_save'
+          }
+            type='button' onClick={() => handleLikeClick(movieData)} onMouseEnter={handleMouseEnter}></button>
+          :
+          <button className='movie__btn movie__btn_type_remove'
+            type='button' onClick={() => handleRemoveButton(movieData)} onMouseEnter={handleMouseEnter}></button>
+        :
+        location === '/movies' ?
+          <button className={
+            isLiked && imageHovered ?
+              'movie__btn movie__btn_type_remove'
+              :
+              isLiked ?
+                'movie__btn movie__btn_type_saved'
+                :
+                `movie__btn ${imageHovered && 'movie__btn_type_save'}`
+          }
+            type='button' onClick={() => handleLikeClick(movieData)} onMouseEnter={handleMouseEnter}></button>
+          :
+          <button className={`movie__btn ${imageHovered && 'movie__btn_type_remove'}`}
+            type='button' onClick={() => handleRemoveButton(movieData)} onMouseEnter={handleMouseEnter}></button>
       }
-      
-    </article >
+      </div>
+    </article>
   );
 }
 

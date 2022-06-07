@@ -24,8 +24,8 @@ function Navigation({ type }, props) {
 
   return (
     <nav className={`navigation-${type}`}>
-      {type === 'header' ?
-        <ul className='navigation-header__list'>
+      {type === 'header' ?  
+       <ul className='navigation-header__list'>
           <Logo />
           <li className='navigation-header__list-item navigation-header__movies'>
             <Link className='navigation-header__link' to='/movies'>Фильмы</Link>
@@ -61,8 +61,7 @@ function Navigation({ type }, props) {
               </div>
             </Link>
           </li>
-        </ul>
-      }
+        </ul>} 
     </nav>
   );
 }

@@ -4,6 +4,7 @@
     align-items: center;
     justify-content: center;
     padding-top: 35vh;
+    height: 100vh;
   }
   
   .not-found__error {}
